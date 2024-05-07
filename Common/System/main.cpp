@@ -35,6 +35,7 @@ int main(int argc,const char *argv[])
 	// ---------------------------------------------
     // 1. Create main analysis object
 #ifdef MPM_CODE
+  cout << "Reading MPM object.."<<endl;
 	fmobj=new NairnMPM();
 #else
 	fmobj=new NairnFEA();
