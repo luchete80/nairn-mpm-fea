@@ -15,3 +15,5 @@ cmake ../nairn-mpm-fea -DXERCESC_INCLUDE_DIR=/home/weldform-pc/Numerico/xerces-c
 
 
 cmake ../nairn-mpm-fea -DXERCESC_INCLUDE_DIR=/home/weldform-pc/Numerico/Libs/xerces-c-3.2.5/src -DXERCESC_LIB_DIR=/home/weldform-pc/Numerico/Libs/xerces-c-3.2.5/src/.libs
+
+cmake ../nairn-mpm-fea -DXERCESC_INCLUDE_DIR=/home/weldform-pc/Numerico/Libs/xerces-c-3.2.0/src -DXERCESC_LIB_DIR=/home/weldform-pc/Numerico/Libs/xerces-c-3.2.0_bin/src/
