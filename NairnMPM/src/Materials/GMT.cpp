@@ -1,5 +1,5 @@
 /********************************************************************************
-    JohnsonCook.hpp
+    GMT.hpp
     nairn-mpm-fea
     
     Created by John Nairn, August 12, 2008.
@@ -12,7 +12,7 @@
 #if defined ( _MSC_VER) || defined (__APPLE__)
 #include "stdafx.h"
 #endif
-#include "Materials/JohnsonCook.hpp"
+#include "Materials/GMT.hpp"
 #include "MPM_Classes/MPMBase.hpp"
 #include "Global_Quantities/ThermalRamp.hpp"
 #include "Exceptions/CommonException.hpp"
@@ -21,11 +21,11 @@
 #include "System/MPMPrefix.hpp"
 #include <iostream>
 
-#pragma mark JohnsonCook::Constructors and Destructors
+#pragma mark GMT::Constructors and Destructors
 
-JohnsonCook::JohnsonCook() {}
+GMT::GMT() {}
 
-JohnsonCook::JohnsonCook(MaterialBase *pair) : HardeningLawBase(pair)
+GMT::GMT(MaterialBase *pair) : HardeningLawBase(pair)
 {
     // Ajc is in the yield stress in HardenLawBase class
 	Bjc = 0.;             // pressure
@@ -37,13 +37,13 @@ JohnsonCook::JohnsonCook(MaterialBase *pair) : HardeningLawBase(pair)
 	Djc = 0.;			  // dimensionless
 	n2jc = 1.;			  // dimensionless
 	
-	lawID = JOHNSONCOOOK_ID;
+	lawID = GMT_ID;
 }
 
-#pragma mark JohnsonCook::Initialization
+#pragma mark GMT::Initialization
 
 // Read material properties
-char *JohnsonCook::InputHardeningProperty(char *xName,int &input,double &gScaling)
+char *GMT::InputHardeningProperty(char *xName,int &input,double &gScaling)
 {
     if(strcmp(xName,"Bjc")==0)
     {	input=DOUBLE_NUM;
@@ -86,7 +86,7 @@ char *JohnsonCook::InputHardeningProperty(char *xName,int &input,double &gScalin
 }
 
 // print just yield properties to output window
-void JohnsonCook::PrintYieldProperties(void) const
+void GMT::PrintYieldProperties(void) const
 {
     cout << GetHardeningLawName() << endl;
     MaterialBase::PrintProperty("A",yield*UnitsController::Scaling(1.e-6),"");
@@ -109,7 +109,7 @@ void JohnsonCook::PrintYieldProperties(void) const
 }
 
 // Private properties used in hardening law
-const char *JohnsonCook::VerifyAndLoadProperties(int np)
+const char *GMT::VerifyAndLoadProperties(int np)
 {	
     if(Tmjc <= thermal.reference)
         return "The melting temperature must be >= the reference temperature";
@@ -133,15 +133,15 @@ const char *JohnsonCook::VerifyAndLoadProperties(int np)
 	return NULL;
 }
 
-#pragma mark JohnsonCook:Methods
+#pragma mark GMT:Methods
 
 // size of hardening law properties needed in strain updates
-int JohnsonCook::SizeOfHardeningProps(void) const { return sizeof(JCProperties); }
+int GMT::SizeOfHardeningProps(void) const { return sizeof(GMTProperties); }
 
 // Get copy of particle-state dependent properties - two temperature terms
-void *JohnsonCook::GetCopyOfHardeningProps(MPMBase *mptr,int np,void *altBuffer,int offset)
+void *GMT::GetCopyOfHardeningProps(MPMBase *mptr,int np,void *altBuffer,int offset)
 {
-	JCProperties *p = (JCProperties *)altBuffer;
+	GMTProperties *p = (GMTProperties *)altBuffer;
 	
 	// homologous temperature (as needed by Johnson and Cook)
 	p->hmlgTemp=(mptr->pPreviousTemperature - thermal.reference) /
@@ -165,19 +165,19 @@ void *JohnsonCook::GetCopyOfHardeningProps(MPMBase *mptr,int np,void *altBuffer,
 }
 
 // Cast void * to correct pointer and delete it
-void JohnsonCook::DeleteCopyOfHardeningProps(void *properties,int np) const
+void GMT::DeleteCopyOfHardeningProps(void *properties,int np) const
 {
-	JCProperties *p = (JCProperties *)properties;
+	GMTProperties *p = (GMTProperties *)properties;
 	delete p;
 }
 
-#pragma mark JohnsonCook::Law Methods
+#pragma mark GMT::Law Methods
 
 // Return yield stress for current conditions (alpint for cum. plastic strain and dalpha/delTime for plastic strain rate)
 // yield = (A + B ep^n)(1_c ln epdot + D (ln epdot)^n2)*TjcTerm, where ep=alpint, epdot=dalpha/delTime
-double JohnsonCook::GetYield(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void *properties) const
+double GMT::GetYield(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void *properties) const
 {
-	JCProperties *p = (JCProperties *)properties;
+	GMTProperties *p = (GMTProperties *)properties;
     if(p->hmlgTemp>=1.) return 0.;
     double term1 = yldred + Bred*pow(a->alpint,njc);
     double ep = a->dalpha/(delTime*ep0jc);
@@ -189,9 +189,9 @@ double JohnsonCook::GetYield(MPMBase *mptr,int np,double delTime,HardeningAlpha 
 // Get derivative of sqrt(2./3.)*yield with respect to lambda for plane strain and 3D
 // ... and using dep/dlambda = sqrt(2./3.)
 // ... and epdot = dalpha/delTime with dalpha = sqrt(2./3.)lambda or depdot/dlambda = sqrt(2./3.)/delTime
-double JohnsonCook::GetKPrime(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void *properties) const
+double GMT::GetKPrime(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void *properties) const
 {
-	JCProperties *p = (JCProperties *)properties;
+	GMTProperties *p = (GMTProperties *)properties;
     if(p->hmlgTemp>=1.) return 0.;
     double ep = a->dalpha/(delTime*ep0jc);
 	double dterm1 = Bred*njc*pow(a->alpint,njc-1.);
@@ -216,10 +216,10 @@ double JohnsonCook::GetKPrime(MPMBase *mptr,int np,double delTime,HardeningAlpha
 // ... and using dep/dlambda = sqrt(2./3.)*fnp1 where ep=alpint
 // ... and epdot = dalpha/delTime with dalpha = sqrt(2./3.)*lambda*fnp1 or depdot/dlambda = sqrt(2./3.)*fnp1/delTime
 // Also equal to sqrt(2./3.)*GetYield()*GetKPrime()*fnp1, but in separate call for efficiency
-double JohnsonCook::GetK2Prime(MPMBase *mptr,double fnp1,double delTime,HardeningAlpha *a,void *properties) const
+double GMT::GetK2Prime(MPMBase *mptr,double fnp1,double delTime,HardeningAlpha *a,void *properties) const
 {   
     if(DbleEqual(a->alpint,0.)) return 0.;
-	JCProperties *p = (JCProperties *)properties;
+	GMTProperties *p = (GMTProperties *)properties;
 	if(p->hmlgTemp>=1.) return 0.;
     double term1 = yldred + Bred*pow(a->alpint,njc);
 	double dterm1 = Bred*njc*pow(a->alpint,njc-1.);
@@ -244,9 +244,9 @@ double JohnsonCook::GetK2Prime(MPMBase *mptr,double fnp1,double delTime,Hardenin
 
 // Return (K(alpha)-K(0)), which is used in dissipated energy calculation
 // If K(0) in current particle state differs from yldred, will need to override
-double JohnsonCook::GetYieldIncrement(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void *properties) const
+double GMT::GetYieldIncrement(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void *properties) const
 {
-	JCProperties *p = (JCProperties *)properties;
+	GMTProperties *p = (GMTProperties *)properties;
     if(p->hmlgTemp>=1.) return 0.;
     double ep = a->dalpha/(delTime*ep0jc);
     double term2 = ep>edotMin ? 1. + Cjc*log(ep) : eminTerm ;
@@ -255,12 +255,12 @@ double JohnsonCook::GetYieldIncrement(MPMBase *mptr,int np,double delTime,Harden
 }
 
 // watch for temperature above the melting point and zero out the deviatoric stress
-double JohnsonCook::SolveForLambdaBracketed(MPMBase *mptr,int np,double strial,Tensor *stk,
+double GMT::SolveForLambdaBracketed(MPMBase *mptr,int np,double strial,Tensor *stk,
 							double Gred,double psKred,double Pfinal,double delTime,
 							HardeningAlpha *a,void *properties,int offset) const
 {
     // if melted, return for zero deviatoric stress
-	JCProperties *p = (JCProperties *)properties;
+	GMTProperties *p = (GMTProperties *)properties;
     if(p->hmlgTemp>=1.)
     {   return strial/(2.*Gred);
     }
@@ -269,8 +269,8 @@ double JohnsonCook::SolveForLambdaBracketed(MPMBase *mptr,int np,double strial,T
     return HardeningLawBase::SolveForLambdaBracketed(mptr,np,strial,stk,Gred,psKred,Pfinal,delTime,a,properties,offset);
 }
 
-#pragma mark JohnsonCook::Accessors
+#pragma mark GMT::Accessors
 
 // hardening law name
-const char *JohnsonCook::GetHardeningLawName(void) const { return "Johnson-Cook hardening"; }
+const char *GMT::GetHardeningLawName(void) const { return "Johnson-Cook hardening"; }
 

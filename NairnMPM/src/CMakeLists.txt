@@ -15,7 +15,7 @@ FILE(GLOB_RECURSE EXCEPT_SRCS         "Exceptions/*.h" "Exceptions/*.cpp")
 FILE(GLOB_RECURSE GLOBAL_QTS          "Global_Quantities/*.h" "Global_Quantities/*.cpp")
 
 FILE(GLOB_RECURSE NODES_SRCS          "Nodes/*.h" "Nodes/*.cpp")
-FILE(GLOB_RECURSE MATERIALS_SRCS      "Materials/*.h"  "Materials/*.cpp" )
+FILE(GLOB_RECURSE MATERIALS_SRCS      "Materials/*.h"  "Materials/*.cpp")
 
 FILE(GLOB_RECURSE MPMCLASSES_SRCS     "MPM_Classes/*.h" "MPM_Classes/*.cpp")
 FILE(GLOB_RECURSE NAIRNMPMCLASS_SRCS  "NairnMPM_Class/*.h" "NairnMPM_Class/*.cpp")

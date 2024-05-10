@@ -9,11 +9,11 @@
 		HardeningLawBase.hpp, MaterialBase.hpp
 ********************************************************************************/
 
-#ifndef _JOHNSONCOOKHARDENING_
+#ifndef _GMTHARDENING_
 
-#define _JOHNSONCOOKHARDENING_
+#define _GMTHARDENING_
 
-#define JOHNSONCOOOK_ID 3
+#define GMT_ID 100
 
 #include "Materials/HardeningLawBase.hpp"
 
@@ -21,14 +21,14 @@
 typedef struct {
 	double hmlgTemp;
 	double TjcTerm;
-} JCProperties;
+} GMTProperties;
 
 class GMT : public HardeningLawBase
 {
     public:
         // contructors
-        JohnsonCook();
-        JohnsonCook(MaterialBase *);
+        GMT();
+        GMT(MaterialBase *);
         
         // initialize
         virtual char *InputHardeningProperty(char *,int &,double &);
