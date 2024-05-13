@@ -43,44 +43,85 @@ GMT::GMT(MaterialBase *pair) : HardeningLawBase(pair)
 #pragma mark GMT::Initialization
 
 // Read material properties
+// GMT IS WITH TEMPS IN CELSIUS
 char *GMT::InputHardeningProperty(char *xName,int &input,double &gScaling)
 {
-    if(strcmp(xName,"Bjc")==0)
+    // else if(strcmp(xName,"Ajc")==0)
+    // {	input=DOUBLE_NUM;
+		// return UnitsController::ScaledPtr((char *)&yield,gScaling,1.e6);
+	  // }
+    if(strcmp(xName,"n1gmt")==0)
     {	input=DOUBLE_NUM;
-		return UnitsController::ScaledPtr((char *)&Bjc,gScaling,1.e6);
+        return((char *)&n1gmt);
     }
-    else if(strcmp(xName,"Ajc")==0)
+    else if(strcmp(xName,"n2gmt")==0)
     {	input=DOUBLE_NUM;
-		return UnitsController::ScaledPtr((char *)&yield,gScaling,1.e6);
-	}
-    else if(strcmp(xName,"njc")==0)
-    {	input=DOUBLE_NUM;
-        return((char *)&njc);
+        return((char *)&n2gmt);
     }
-    else if(strcmp(xName,"Cjc")==0)
+    else if(strcmp(xName,"C1gmt")==0)
     {	input=DOUBLE_NUM;
-        return((char *)&Cjc);
+      //return((char *)&C1gmt);
+      return UnitsController::ScaledPtr((char *)&C1gmt,gScaling,1.e6);
     }
-    else if(strcmp(xName,"ep0jc")==0)
+    else if(strcmp(xName,"C2gmt")==0)
     {	input=DOUBLE_NUM;
-        return((char *)&ep0jc);
+        return((char *)&C2gmt);
     }
-    else if(strcmp(xName,"Tmjc")==0)
+    else if(strcmp(xName,"m1gmt")==0)
     {	input=DOUBLE_NUM;
-        return((char *)&Tmjc);
+        return((char *)&m1gmt);
     }
-    else if(strcmp(xName,"mjc")==0)
+    else if(strcmp(xName,"m2gmt")==0)
     {	input=DOUBLE_NUM;
-        return((char *)&mjc);
+        return((char *)&m2gmt);
     }
-	else if(strcmp(xName,"n2jc")==0)
-	{	input=DOUBLE_NUM;
-		return((char *)&n2jc);
-	}
-	else if(strcmp(xName,"Djc")==0)
-	{	input=DOUBLE_NUM;
-		return((char *)&Djc);
-	}
+
+    else if(strcmp(xName,"e_min")==0)
+    {	input=DOUBLE_NUM;
+        return((char *)&e_min);
+    }
+    else if(strcmp(xName,"e_max")==0)
+    {	input=DOUBLE_NUM;
+        return((char *)&e_max);
+    }    
+
+    else if(strcmp(xName,"er_min")==0)
+    {	input=DOUBLE_NUM;
+        return((char *)&er_min);
+    }
+    else if(strcmp(xName,"er_max")==0)
+    {	input=DOUBLE_NUM;
+        return((char *)&er_max);
+    }    
+
+    else if(strcmp(xName,"T_min")==0)
+    {	input=DOUBLE_NUM;
+        return((char *)&T_min);
+    }
+    else if(strcmp(xName,"T_max")==0)
+    {	input=DOUBLE_NUM;
+        return((char *)&T_max);
+    }           
+    // else if(strcmp(xName,"ep0jc")==0)
+    // {	input=DOUBLE_NUM;
+        // return((char *)&ep0jc);
+    // }
+    // else if(strcmp(xName,"Tmjc")==0)
+    // {	input=DOUBLE_NUM;
+        // return((char *)&Tmjc);
+    // }
+    // else if(strcmp(xName,"mjc")==0)
+    // {	input=DOUBLE_NUM;
+        // return((char *)&mjc);
+    // }
+	// else if(strcmp(xName,"n2jc")==0)
+	// {	input=DOUBLE_NUM;
+		// return((char *)&n2jc);
+	// }
+	// else if(strcmp(xName,"Djc")==0)
+	// {	input=DOUBLE_NUM;
+		// return((char *)&Djc);
+	// }
 
     return HardeningLawBase::InputHardeningProperty(xName,input,gScaling);
 }
@@ -178,12 +219,12 @@ void GMT::DeleteCopyOfHardeningProps(void *properties,int np) const
 double GMT::GetYield(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void *properties) const
 {
 	GMTProperties *p = (GMTProperties *)properties;
-    if(p->hmlgTemp>=1.) return 0.;
-    double term1 = yldred + Bred*pow(a->alpint,njc);
-    double ep = a->dalpha/(delTime*ep0jc);
-    double term2 = ep>edotMin ? 1. + Cjc*log(ep) : eminTerm ;
-	if(Djc!=0. && ep>1.) term2 += Djc*pow(log(ep),n2jc);
-    return term1 * term2 * p->TjcTerm ;
+    // if(p->hmlgTemp>=1.) return 0.;
+    // double term1 = yldred + Bred*pow(a->alpint,njc);
+    // double ep = a->dalpha/(delTime*ep0jc);
+    // double term2 = ep>edotMin ? 1. + Cjc*log(ep) : eminTerm ;
+	// if(Djc!=0. && ep>1.) term2 += Djc*pow(log(ep),n2jc);
+    // return term1 * term2 * p->TjcTerm ;
 }
 
 // Get derivative of sqrt(2./3.)*yield with respect to lambda for plane strain and 3D
@@ -272,5 +313,5 @@ double GMT::SolveForLambdaBracketed(MPMBase *mptr,int np,double strial,Tensor *s
 #pragma mark GMT::Accessors
 
 // hardening law name
-const char *GMT::GetHardeningLawName(void) const { return "Johnson-Cook hardening"; }
+const char *GMT::GetHardeningLawName(void) const { return "GMT hardening"; }
 

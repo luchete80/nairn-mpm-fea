@@ -23,6 +23,7 @@
 #include "Materials/LinearHardening.hpp"
 #include "Materials/NonlinearHardening.hpp"
 #include "Materials/JohnsonCook.hpp"
+#include "Materials/GMT.hpp"
 #include "Materials/SCGLHardening.hpp"
 #include "Materials/SLMaterial.hpp"
 #include "Materials/Nonlinear2Hardening.hpp"
@@ -584,6 +585,11 @@ void MaterialBase::SetHardeningLaw(char *lawName)
     else if(strcmp(lawName,"DDB-PPM")==0 || strcmp(lawName,"7")==0)
     {   pLaw = new DDBHardening(this);
 		lawID = 7;
+    }
+
+    else if(strcmp(lawName,"GMT")==0 || strcmp(lawName,"10")==0)
+    {   pLaw = new GMT(this);
+        lawID = 10;
     }
     
     // was it found
