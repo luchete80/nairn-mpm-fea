@@ -225,6 +225,20 @@ double GMT::GetYield(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void 
     // double term2 = ep>edotMin ? 1. + Cjc*log(ep) : eminTerm ;
 	// if(Djc!=0. && ep>1.) term2 += Djc*pow(log(ep),n2jc);
     // return term1 * term2 * p->TjcTerm ;
+
+  double e,er,T;
+  e = a->alpint; er = a->dalpha/delTime; T = mptr->pPreviousTemperature;
+  if      (e < e_min) e = e_min;
+  else if (e > e_max) e = e_max;
+
+  if      (er < er_min) er = er_min;
+  else if (er > er_max) er = er_max;
+  
+  if      (T < T_min) T = T_min;
+  else if (T > T_max) T = T_max;
+  
+  return C1gmt * exp(C2gmt*T)*pow(e,n1gmt*T+n2gmt) * exp((I1gmt*T+I2gmt)/e)*pow(er,m1gmt*T+m2gmt);
+
 }
 
 // Get derivative of sqrt(2./3.)*yield with respect to lambda for plane strain and 3D
@@ -232,25 +246,41 @@ double GMT::GetYield(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void 
 // ... and epdot = dalpha/delTime with dalpha = sqrt(2./3.)lambda or depdot/dlambda = sqrt(2./3.)/delTime
 double GMT::GetKPrime(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void *properties) const
 {
+  //cout << "CALLED GETKPRIME"<< endl;
 	GMTProperties *p = (GMTProperties *)properties;
-    if(p->hmlgTemp>=1.) return 0.;
-    double ep = a->dalpha/(delTime*ep0jc);
-	double dterm1 = Bred*njc*pow(a->alpint,njc-1.);
-    if(ep>edotMin)
-    {   double term1 = yldred + Bred*pow(a->alpint,njc);
-        double term2 = 1. + Cjc*log(ep) ;
-		double dterm2 = Cjc*ep0jc/a->dalpha;
-		if(Djc!=0. && ep>1.)
-		{	term2 += Djc*pow(log(ep),n2jc);
-			dterm2 += Djc*ep0jc*n2jc*pow(log(ep),n2jc-1.)/a->dalpha;
-		}
-        return TWOTHIRDS * p->TjcTerm * (dterm1*term2 + term1*dterm2 ) ;
-    }
-    else
-	{	double term2 = eminTerm;
-		// dterm2 = 0
-		return TWOTHIRDS * p->TjcTerm * dterm1*term2 ;
-	}
+  double Et =0.;
+  double e,er,T;
+  e = a->alpint; er = a->dalpha/delTime; T = mptr->pPreviousTemperature;
+  if      (e < e_min) e = e_min;
+  else if (e > e_max) e = e_max;
+
+  if      (er < er_min) er = er_min;
+  else if (er > er_max) er = er_max;
+  
+  if      (T < T_min) T = T_min;
+  else if (T > T_max) T = T_max;
+	
+  return C1gmt*exp(C2gmt*T)*pow(er,m1gmt*T+m2gmt)* //constant part
+       pow(e,T*n1gmt+n2gmt-2.0)*(-I1gmt*T-I2gmt+e*(n1gmt*T+n2gmt))*exp((I1gmt*T+I2gmt)/e);
+       
+    // if(p->hmlgTemp>=1.) return 0.;
+    // double ep = a->dalpha/(delTime*ep0jc);
+	// double dterm1 = Bred*njc*pow(a->alpint,njc-1.);
+    // if(ep>edotMin)
+    // {   double term1 = yldred + Bred*pow(a->alpint,njc);
+        // double term2 = 1. + Cjc*log(ep) ;
+		// double dterm2 = Cjc*ep0jc/a->dalpha;
+		// if(Djc!=0. && ep>1.)
+		// {	term2 += Djc*pow(log(ep),n2jc);
+			// dterm2 += Djc*ep0jc*n2jc*pow(log(ep),n2jc-1.)/a->dalpha;
+		// }
+        // return TWOTHIRDS * p->TjcTerm * (dterm1*term2 + term1*dterm2 ) ;
+    // }
+    // else
+	// {	double term2 = eminTerm;
+		// // dterm2 = 0
+		// return TWOTHIRDS * p->TjcTerm * dterm1*term2 ;
+	// }
 }
 
 // Get derivative of (1./3.)*yield^2 with respect to lambda for plane stress only
@@ -258,41 +288,44 @@ double GMT::GetKPrime(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void
 // ... and epdot = dalpha/delTime with dalpha = sqrt(2./3.)*lambda*fnp1 or depdot/dlambda = sqrt(2./3.)*fnp1/delTime
 // Also equal to sqrt(2./3.)*GetYield()*GetKPrime()*fnp1, but in separate call for efficiency
 double GMT::GetK2Prime(MPMBase *mptr,double fnp1,double delTime,HardeningAlpha *a,void *properties) const
-{   
-    if(DbleEqual(a->alpint,0.)) return 0.;
-	GMTProperties *p = (GMTProperties *)properties;
-	if(p->hmlgTemp>=1.) return 0.;
-    double term1 = yldred + Bred*pow(a->alpint,njc);
-	double dterm1 = Bred*njc*pow(a->alpint,njc-1.);
-    double ep = a->dalpha/(delTime*ep0jc);
-    if(ep>edotMin)
-    {   double term2 = 1. + Cjc*log(ep) ;
-		double dterm2 = Cjc*ep0jc/a->dalpha;
-		if(Djc!=0. && ep>1.)
-		{	term2 += Djc*pow(log(ep),n2jc);
-			dterm2 += Djc*ep0jc*n2jc*pow(log(ep),n2jc-1.)/a->dalpha;
-		}
-		return SQRT_EIGHT27THS * term1 * term2 * fnp1 * p->TjcTerm * p->TjcTerm *
-                        (dterm1*term2 + dterm2*term1) ;
-    }
-    else
-	{	double term2 = eminTerm;
-		// dterm2 = 0
-      	return SQRT_EIGHT27THS * term1 * term2 * fnp1 * p->TjcTerm * p->TjcTerm *
-                    	dterm1*term2  ;
-    }
+{  
+  cout << "CALLED k2 prime "<<endl; 
+    // if(DbleEqual(a->alpint,0.)) return 0.;
+	// GMTProperties *p = (GMTProperties *)properties;
+	// if(p->hmlgTemp>=1.) return 0.;
+    // double term1 = yldred + Bred*pow(a->alpint,njc);
+	// double dterm1 = Bred*njc*pow(a->alpint,njc-1.);
+    // double ep = a->dalpha/(delTime*ep0jc);
+    // if(ep>edotMin)
+    // {   double term2 = 1. + Cjc*log(ep) ;
+		// double dterm2 = Cjc*ep0jc/a->dalpha;
+		// if(Djc!=0. && ep>1.)
+		// {	term2 += Djc*pow(log(ep),n2jc);
+			// dterm2 += Djc*ep0jc*n2jc*pow(log(ep),n2jc-1.)/a->dalpha;
+		// }
+		// return SQRT_EIGHT27THS * term1 * term2 * fnp1 * p->TjcTerm * p->TjcTerm *
+                        // (dterm1*term2 + dterm2*term1) ;
+    // }
+    // else
+	// {	double term2 = eminTerm;
+		// // dterm2 = 0
+      	// return SQRT_EIGHT27THS * term1 * term2 * fnp1 * p->TjcTerm * p->TjcTerm *
+                    	// dterm1*term2  ;
+    // }
 }
 
 // Return (K(alpha)-K(0)), which is used in dissipated energy calculation
 // If K(0) in current particle state differs from yldred, will need to override
 double GMT::GetYieldIncrement(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void *properties) const
 {
-	GMTProperties *p = (GMTProperties *)properties;
-    if(p->hmlgTemp>=1.) return 0.;
-    double ep = a->dalpha/(delTime*ep0jc);
-    double term2 = ep>edotMin ? 1. + Cjc*log(ep) : eminTerm ;
-	if(Djc!=0. && ep>1.) term2 += Djc*pow(log(ep),n2jc);
-	return Bred*pow(a->alpint,njc) * term2 * p->TjcTerm ;
+  //cout << "GET YIELD INC"<<endl;
+	// GMTProperties *p = (GMTProperties *)properties;
+    // if(p->hmlgTemp>=1.) return 0.;
+    // double ep = a->dalpha/(delTime*ep0jc);
+    // double term2 = ep>edotMin ? 1. + Cjc*log(ep) : eminTerm ;
+	// if(Djc!=0. && ep>1.) term2 += Djc*pow(log(ep),n2jc);
+	// return Bred*pow(a->alpint,njc) * term2 * p->TjcTerm ;
+  return 0.0;
 }
 
 // watch for temperature above the melting point and zero out the deviatoric stress
