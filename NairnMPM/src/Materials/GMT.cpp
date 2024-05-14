@@ -75,7 +75,14 @@ char *GMT::InputHardeningProperty(char *xName,int &input,double &gScaling)
     {	input=DOUBLE_NUM;
         return((char *)&m2gmt);
     }
-
+    else if(strcmp(xName,"I1gmt")==0)
+    {	input=DOUBLE_NUM;
+      return((char *)&I1gmt);
+    }
+    else if(strcmp(xName,"I2gmt")==0)
+    {	input=DOUBLE_NUM;
+        return((char *)&I2gmt);
+    }
     else if(strcmp(xName,"e_min")==0)
     {	input=DOUBLE_NUM;
         return((char *)&e_min);
@@ -221,10 +228,10 @@ double GMT::GetYield(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void 
 	GMTProperties *p = (GMTProperties *)properties;
     // if(p->hmlgTemp>=1.) return 0.;
     // double term1 = yldred + Bred*pow(a->alpint,njc);
-    // double ep = a->dalpha/(delTime*ep0jc);
-    // double term2 = ep>edotMin ? 1. + Cjc*log(ep) : eminTerm ;
-	// if(Djc!=0. && ep>1.) term2 += Djc*pow(log(ep),n2jc);
-    // return term1 * term2 * p->TjcTerm ;
+     // double ep = a->dalpha/(delTime*ep0jc);
+     // double term2 = ep>edotMin ? 1. + Cjc*log(ep) : eminTerm ;
+	// // if(Djc!=0. && ep>1.) term2 += Djc*pow(log(ep),n2jc);
+     // cout << "SY JC " <<term1 * term2 * p->TjcTerm <<endl;
 
   double e,er,T;
   e = a->alpint; er = a->dalpha/delTime; T = mptr->pPreviousTemperature;
@@ -236,7 +243,7 @@ double GMT::GetYield(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void 
   
   if      (T < T_min) T = T_min;
   else if (T > T_max) T = T_max;
-  
+  //cout << "SY: "<<C1gmt * exp(C2gmt*T)*pow(e,n1gmt*T+n2gmt) * exp((I1gmt*T+I2gmt)/e)*pow(er,m1gmt*T+m2gmt)<<endl;
   return C1gmt * exp(C2gmt*T)*pow(e,n1gmt*T+n2gmt) * exp((I1gmt*T+I2gmt)/e)*pow(er,m1gmt*T+m2gmt);
 
 }
@@ -260,7 +267,7 @@ double GMT::GetKPrime(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void
   if      (T < T_min) T = T_min;
   else if (T > T_max) T = T_max;
 	
-  return C1gmt*exp(C2gmt*T)*pow(er,m1gmt*T+m2gmt)* //constant part
+  return TWOTHIRDS * C1gmt*exp(C2gmt*T)*pow(er,m1gmt*T+m2gmt)* //constant part
        pow(e,T*n1gmt+n2gmt-2.0)*(-I1gmt*T-I2gmt+e*(n1gmt*T+n2gmt))*exp((I1gmt*T+I2gmt)/e);
        
     // if(p->hmlgTemp>=1.) return 0.;
