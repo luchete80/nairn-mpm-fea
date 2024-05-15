@@ -13,10 +13,8 @@
  <!ENTITY rman "27.5">
 
  <!ENTITY T0 "298">
- <!ENTITY temp "300">
  
- <!ENTITY xmatr_i "90">
- <!ENTITY xmatr_e "140">
+
  
  <!ENTITY ymax "150">
  
@@ -54,7 +52,7 @@
     <ArchiveTime units="ms">&atime;</ArchiveTime>
     <TimeStep units="ms">1000</TimeStep>
     <MaxTime units="ms">&maxtime;</MaxTime>
-    <ArchiveRoot>Output_20240508_MS_fase2/isocontact.</ArchiveRoot>
+    <ArchiveRoot>Output_20240515_HotComp_JC/isocontact.</ArchiveRoot>
     <MPMArchiveOrder>mYYYYNNNNNNNYNNNYY</MPMArchiveOrder>
     <CrackArchiveOrder>mYNNN</CrackArchiveOrder>
     <GlobalArchiveTime units="ms">&atime;</GlobalArchiveTime>
@@ -68,7 +66,7 @@
     <GlobalArchive type="temp" material="3"/>
     <Damping>0</Damping>
     <MultiMaterialMode Vmin="0" Dcheck="1" Normals="0" RigidBias="10">
-      <Friction>0.2</Friction>
+      <Friction>0.0</Friction>
     </MultiMaterialMode>
   </MPMHeader>
   
@@ -82,24 +80,17 @@
 
   <MaterialPoints>
   <!-- Billet -->
-    <Body mat="1" angle="0" thick="5" vx="0" vy="0" temp="973.0">
-      <Rect xmin="&xbil_int;" xmax="&xbil;" ymin="0" ymax="&ybil;"/>
+    <Body mat="1" angle="0" thick="5" vx="0" vy="0" temp="&T0;">
+      <Rect xmin="0.0;" xmax="&xbil;" ymin="0" ymax="&ybil;"/>
     </Body>
    <!-- Pusher -->
     <Body mat="2" thick="5" vx="0" vy="0" temp="&T0;">
-      <Rect xmin="&rman;" xmax="&xmatr_i;" ymin="&ybil;" ymax="&ymax;"/>
+      <Rect xmin="0.0;" xmax="&xbil;" ymin="&ybil;" ymax="&ymax;"/>
     </Body>
-   <!-- Mandrel -->
-    <Body mat="3" thick="5" vx="0" vy="0" temp="&T0;">
-      <Rect xmin="0.0" xmax="&rman;" ymin="-&ydie;" ymax="&ymax;"/>
-    </Body>
-   <!-- Container -->
-    <Body mat="3" thick="5" vx="0" vy="0" temp="&T0;">
-      <Rect xmin="&xmatr_i;" xmax="&xmatr_e;" ymin="0.0" ymax="&ymax;"/>
-    </Body>
+
    <!-- Die -->
     <Body mat="3" thick="5" vx="0" vy="0" temp="&T0;">
-      <Rect xmin="&xdie;" xmax="&xmax;" ymin="-&ydie;" ymax="0.0;"/>
+      <Rect xmin="0.0;" xmax="&xmax;" ymin="-&ydie;" ymax="0.0;"/>
     </Body>
   </MaterialPoints>
 
@@ -110,8 +101,15 @@
     <alpha>60</alpha>
 	<kCond> 0.401 </kCond>
   <Cp>0.06</Cp>
-     <Hardening>10</Hardening>
-     <n1gmt> 1.0</n1gmt> 
+     <Hardening>3</Hardening>
+         <Ajc> 93.0</Ajc> 
+	 <Bjc> 300.0</Bjc>
+	 <njc> 0.3</njc>
+	 <mjc> 0.131</mjc>
+	 <Cjc> 0.0935</Cjc>
+	 <Tmjc> 1400.0 </Tmjc>
+	 <ep0jc> 0.001</ep0jc>
+   <Tmjc> 1800.0 </Tmjc>
   </Material>
   
 

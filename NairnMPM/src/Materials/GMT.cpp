@@ -137,7 +137,7 @@ char *GMT::InputHardeningProperty(char *xName,int &input,double &gScaling)
 void GMT::PrintYieldProperties(void) const
 {
     cout << GetHardeningLawName() << endl;
-    MaterialBase::PrintProperty("A",yield*UnitsController::Scaling(1.e-6),"");
+    MaterialBase::PrintProperty("C1",yield*UnitsController::Scaling(1.e-6),"");
 	MaterialBase::PrintProperty("B",Bjc*UnitsController::Scaling(1.e-6),"");
 	MaterialBase::PrintProperty("n",njc,"");
     cout << endl;
@@ -163,7 +163,9 @@ const char *GMT::VerifyAndLoadProperties(int np)
         return "The melting temperature must be >= the reference temperature";
     
 	// reduced prooperties
-    Bred = Bjc/parent->GetRho(NULL);
+    //Bred = Bjc/parent->GetRho(NULL);
+    cout << "VALIDATION: Initial Yield: "<<yield<<endl;
+    C1gmt_red = C1gmt/parent->GetRho(NULL);
 	
     // reduced yield stress or Ajc
 	HardeningLawBase::VerifyAndLoadProperties(np);
@@ -243,8 +245,8 @@ double GMT::GetYield(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void 
   
   if      (T < T_min) T = T_min;
   else if (T > T_max) T = T_max;
-  //cout << "SY: "<<C1gmt * exp(C2gmt*T)*pow(e,n1gmt*T+n2gmt) * exp((I1gmt*T+I2gmt)/e)*pow(er,m1gmt*T+m2gmt)<<endl;
-  return C1gmt * exp(C2gmt*T)*pow(e,n1gmt*T+n2gmt) * exp((I1gmt*T+I2gmt)/e)*pow(er,m1gmt*T+m2gmt);
+  //cout << "SY: "<<C1gmt_red * exp(C2gmt*T)*pow(e,n1gmt*T+n2gmt) * exp((I1gmt*T+I2gmt)/e)*pow(er,m1gmt*T+m2gmt)<<endl;
+  return C1gmt_red * exp(C2gmt*T)*pow(e,n1gmt*T+n2gmt) * exp((I1gmt*T+I2gmt)/e)*pow(er,m1gmt*T+m2gmt);
 
 }
 
@@ -267,7 +269,7 @@ double GMT::GetKPrime(MPMBase *mptr,int np,double delTime,HardeningAlpha *a,void
   if      (T < T_min) T = T_min;
   else if (T > T_max) T = T_max;
 	
-  return TWOTHIRDS * C1gmt*exp(C2gmt*T)*pow(er,m1gmt*T+m2gmt)* //constant part
+  return TWOTHIRDS * C1gmt_red*exp(C2gmt*T)*pow(er,m1gmt*T+m2gmt)* //constant part
        pow(e,T*n1gmt+n2gmt-2.0)*(-I1gmt*T-I2gmt+e*(n1gmt*T+n2gmt))*exp((I1gmt*T+I2gmt)/e);
        
     // if(p->hmlgTemp>=1.) return 0.;

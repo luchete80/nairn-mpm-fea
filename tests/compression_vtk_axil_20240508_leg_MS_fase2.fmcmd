@@ -136,7 +136,7 @@
   </Material>
 
   <Material Type="11" Name="Fixed">
-    <SetDirection>7</SetDirection>
+    <SetDirection>8</SetDirection>
     <SettingFunction>&zerof;</SettingFunction>
   </Material>
   
@@ -163,6 +163,7 @@
    <Parameter name='selectMaterial'>1</Parameter>
    <Parameter name="contactforce">1</Parameter>
    <Parameter name="equivstress">4</Parameter>
+   <Parameter name="stress">1</Parameter>
    <Parameter name="plasticstrain">5</Parameter>
    <Parameter name="temperature">5</Parameter>
 </Schedule>

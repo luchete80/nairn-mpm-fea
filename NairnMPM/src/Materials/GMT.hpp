@@ -57,7 +57,7 @@ class GMT : public HardeningLawBase
 		double Bjc,Cjc,njc,ep0jc,Tmjc,mjc,Djc,n2jc;
     double n1gmt,n2gmt, m1gmt,m2gmt,C1gmt,C2gmt, I1gmt, I2gmt;
     double er_min, er_max, e_min, e_max, T_min, T_max;  
-		double Bred,edotMin,eminTerm;
+		double C1gmt_red,edotMin,eminTerm;
 
 };
 
