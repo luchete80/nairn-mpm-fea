@@ -13,6 +13,7 @@
  <!ENTITY rman "27.5">
 
  <!ENTITY T0 "700">
+ <!ENTITY ms_fac "1000.0">
 
  
  <!ENTITY xmatr_i "90">
@@ -104,11 +105,11 @@
   </MaterialPoints>
 
   <Material Type="9" Name="Isotropic Material">
-    <rho>87000</rho>
+    <rho>8.7</rho>
     <E>70000</E>
     <nu>0.333333333</nu>
     <alpha>60</alpha>
-	<kCond> 0.401 </kCond>
+    <kCond> "400/&ms_fac;" </kCond>
   <Cp>0.06</Cp>
 
   <Hardening>10</Hardening>
