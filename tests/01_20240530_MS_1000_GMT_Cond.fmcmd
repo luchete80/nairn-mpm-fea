@@ -16,12 +16,12 @@
  <!ENTITY T0_supp "200">
  
  <!ENTITY xmatr_i "90">
- <!ENTITY xmatr_e "140">
+ <!ENTITY xmatr_e "100">
  
- <!ENTITY ymax "150">
+ <!ENTITY ymax "120">
  
  <!ENTITY ysal "100"> 
- <!ENTITY xmax "150">
+ <!ENTITY xmax "100">
  <!ENTITY rigid "8">
  <!ENTITY xdie "30.4">
  <!ENTITY ydie "14">
@@ -103,12 +103,13 @@
     </Body>
   </MaterialPoints>
 
+
   <Material Type="9" Name="Isotropic Material">
-    <rho>8410000</rho>
-    <E>90.0E9</E>
+    <rho>8410</rho>
+    <E>90.E3</E>
     <nu>0.33</nu>
-    <alpha>60</alpha>
-	<kCond> 0.160 </kCond>
+<!--    <alpha>60</alpha>-->
+    <kCond> 0.160 </kCond>
   <Cp>0.56</Cp>
 
   <Hardening>10</Hardening>
