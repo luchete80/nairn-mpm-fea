@@ -1,0 +1,28 @@
+Unit	Legacy	SI (kg-m-s)	mm-g-s	mm-g-ms	c-g-s	cm-μg-μs
+Length (L)	x103=mm	m	x103=mm	x103=mm	x102=cm	x102=cm
+Mass (M)	x103=g	kg	x103=g	x103=g	x103=g	x109=μg
+Time (T)	s	s	s	x103=ms	s	x106=μs
+Alt Time	x103=ms	s	s	x103=ms	s	x106=μs
+Density (M/L3)	x10-3=g/cm3	kg/m3	x10-6=g/mm3	x10-6=g/mm3	x10-3=g/cm3	x103=μg/cm3
+Velocity (L/T)	x103=mm/s	m/s	x103=mm/s	mm/ms	x102=cm/s	x10-4=cm/μs
+Alt Velocity	m/s	m/s	x103=mm/s	mm/ms	x102=cm/s	x10-4=cm/μs
+Acceleration (L/T2)	x103=mm/s2	m/s2	x103=mm/s2	x10-3=mm/ms2	x102=cm/s2	x10-10=cm/μs2
+Force (F=M-L/T2)	N	N	x106=μN	N	x105=dyne	x10-1=Mdyne
+Pressure (P=F/L2=M/(L-T2))	x10-6=MPa	Pa	Pa	x10-6=MPa	x10=Ba=μbar	x10-5=bar=MBa
+Linear Momentum (M-L/T)	N-s	N-s	x106=μN-s	x103=N-ms	x105=dyne-s	x105=dyne-s
+Alt Strain	x102=%	none	none	none	none	none
+Energy (E=F-L=M-L2/T2)	J	J	x109=nJ	x103=mJ	x107=erg	x101=Merg
+Alt Energy	x106=μJ	J	x109=nJ	x103=mJ	x107=erg	x101=Merg
+Torque (F-L=M-L2/T2)	J	J	x109=nJ	x103=mJ	x107=erg	x101=Merg
+Angular Momentum (M-L2/T)	J-s	J-s	x109=nJ-s	x106=mJ-ms	x107=erg-s	x107=erg-s
+Energy Release (E/L2=M/T2=F/L)	J/m2	J/m2	x103=mJ/m2	x10-3=mJ/mm2=kJ/m2	x103=erg/cm2=mJ/m2	x10-3=Merg/cm2=kJ/m2
+Stress Intensity (P-L0.5=M/(L0.5-T2))	x10-6=MPa-m0.5	Pa-m0.5	x31.623=Pa-mm0.5	x31.623=MPa-mm0.5	x102=Ba-cm0.5	x10-4=bar-cm0.5
+Viscosity (P-T=M/(L-T))	x103=cPoise	Pa-s	Pa-s	x10-3=MPa-ms	x10=Poise	x10=Poise
+Diffusion (L2/T)	x106=mm2/s	m2/s	x106=mm2/s	x103=mm2/ms	x104=cm2/s	x10-2=cm2/μs
+Solvent Flux (M/(L2-T))	kg/(m2-s)	kg/(m2-s)	x10-3=g/(mm2-s)	x10-6=g/(mm2-ms)	x10-1=g/(cm2-s)	x10-1=g/(cm2-s)
+Power (E/T=M-L2/T3)	W	W	x109=nW	W	x107=erg/sec	x10-5=Merg/μs
+Conductivity (E/(L-K-T)=M-L/(T3-K))	W/(m-K)	W/(m-K)	x106=μW/(m-K)	x10-3=W/(mm-K)	x105=erg/(cm-K-s)	x10-7=Merg/(cm-K-μs)
+Heat Capacity (E/(M-K)=L2/(T2-K))	J/(kg-K)	J/(kg-K)	x106=μJ/(kg-K)	J/(kg-K)	x104=erg/(g-K)	x10-8=Merg/(μg-K)
+Heat Flux (E/(T-L2)=M/T3)	W/m2	W/m2	x103=mW/m2	x10-6=W/mm2	x103=erg/(cm2-s)	x10-9=Merg/(cm2-μs)
+Heat of Fusion (E/M=L2/T2)	J/kg	J/kg	x106=μJ/kg	J/kg	x104=erg/g	x10-8=Merg/μg
+
