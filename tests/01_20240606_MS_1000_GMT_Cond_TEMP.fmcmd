@@ -154,11 +154,10 @@
     <SetDirection>2</SetDirection>
     <SettingFunction>&vel;</SettingFunction>
   </Material>
-   <!-- MATERIAL 3: DIE AND CONTAINER -->  
+
   <Material Type="11" Name="Fixed">
     <SetDirection>8</SetDirection>
     <SettingFunction>&zerof;</SettingFunction>
-    <SetTemperature>&T0_supp;</SetDirection>
   </Material>
   
   <GridBCs>
