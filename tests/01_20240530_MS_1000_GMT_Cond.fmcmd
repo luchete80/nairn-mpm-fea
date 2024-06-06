@@ -158,7 +158,6 @@
   <Material Type="11" Name="Fixed">
     <SetDirection>8</SetDirection>
     <SettingFunction>&zerof;</SettingFunction>
-    <SetTemperature>&T0_supp;</SetDirection>
   </Material>
   
   <GridBCs>

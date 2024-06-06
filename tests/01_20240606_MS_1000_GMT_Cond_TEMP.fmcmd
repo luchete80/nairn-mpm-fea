@@ -149,15 +149,16 @@
     <!-- <SettingFunction>&vel;</SettingFunction> -->
   <!-- </Material> -->
 
-   <!-- MATERIAL 2 -->  
+  <!-- MATERIAL 2, TYPE 11 (RIGID)-->  
   <Material Type="11" Name="Loading Clamp">
     <SetDirection>2</SetDirection>
     <SettingFunction>&vel;</SettingFunction>
   </Material>
-
+  <!-- MATERIAL 2, TYPE 11 (RIGID), CAST AND DIE-->  
   <Material Type="11" Name="Fixed">
     <SetDirection>8</SetDirection>
     <SettingFunction>&zerof;</SettingFunction>
+    <SetTemperature>&T0_supp;</SetDirection>
   </Material>
   
   <GridBCs>
